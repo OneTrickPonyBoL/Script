@@ -141,7 +141,6 @@ function OnTick()
   	
 end
 function Cords()
-	xcords = unit.
 end
 function Combo()
 	target = STS:GetTarget(E.range)
