@@ -8,7 +8,9 @@ local DMGLib = DamageLib()
 local CLib = DrawManager()
 local Q, W, E, R, IGNITE
 local Drain = false
-local ScriptVersion = 0.1
+local ScriptVersion = 0.2
+SimpleUpdater("[OneTrickFiddle]", ScriptVersion, "raw.github.com" , "/OneTrickPonyBoL/Script/master/Fiddle.lua" , SCRIPT_PATH .. "/Fiddle.lua" , "OneTrickPonyBoL/Script/master/Fiddle.version" ):CheckUpdate()
+
 local ScriptVersionDisp = "1.0"
 local ScriptUpdate = "06.04.2016"
 local SupportedVersion = "6.6HF"
