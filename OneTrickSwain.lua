@@ -1,5 +1,9 @@
 if myHero.charName ~= "Swain" then return end
 
+
+
+
+--FileUpdater
 if FileExist(LIB_PATH .. "/SourceLibk.lua") then
     require("SourceLibk")
 
@@ -8,29 +12,27 @@ else
     DelayAction(function() DownloadFile("https://raw.githubusercontent.com/kej1191/anonym/master/Common/SourceLibk.lua".."?rand="..math.random(1,10000), LIB_PATH.."SourceLibk.lua", function () print_msg("Successfully downloaded SourceLibk. Press F9 twice.") end) end, 3) 
     return
 end
+
+
+
+
 local cfg = scriptConfig("Swain", "Swain")
 local OrbLib = OrbWalkManager()
 local STS = SimpleTS()
-local DMGLib = DamageLib()
 local CLib = DrawManager()
 local Q, W, E, R, IGNITE
 local Ulton = false
 local ScriptVersion = 0.2
 local jungleMinions = minionManager(MINION_JUNGLE, 700, myHero, MINION_SORT_HEALTH_ASC)
 local enemyMinions = minionManager(MINION_ENEMY, 750, myHero,MINION_SORT_HEALTH_ASC)
+--ScriptVersion Menu
+local ScriptVersionDisp = "0.2"
+local ScriptUpdate = "08.04.2016"
+local SupportedVersion = "6.7"
 
 SimpleUpdater("[OneTrickSwain]", ScriptVersion, "raw.github.com" , "/OneTrickPonyBoL/Script/master/OneTrickSwain.lua" , SCRIPT_PATH .. "/OneTrickSwain.lua" , "OneTrickPonyBoL/Script/master/OneTrickSwain.version" ):CheckUpdate()
 
-local ScriptVersionDisp = "1.0"
-local ScriptUpdate = "06.04.2016"
-local SupportedVersion = "6.7"
 
-function print_msg(msg)
-  if msg ~= nil then
-    msg = tostring(msg)
-    print("<font color=\"#79E886\"><b>[OneTrick Swain]</b></font> <font color=\"#FFFFFF\">".. msg .."</font>")
-  end
-end
 function OnLoad()
 
 
@@ -91,6 +93,7 @@ function OnLoad()
 		cfg.Clear:addParam("R","Use R in LaneClear", SCRIPT_PARAM_ONOFF,false)
 		cfg.Clear:addParam("minMana","Min. Mana to use Spells",SCRIPT_PARAM_SLICE,50,1,100)
 		cfg.Clear:addParam("mnMinions", "Min. Minons to use R", SCRIPT_PARAM_SLICE,5,1,10)
+		cfg.Clear:addParam("info3","",SCRIPT_PARAM_INFO,"")
 		cfg.Clear:addParam("info2","Jungle Settings",SCRIPT_PARAM_INFO,"")
 		cfg.Clear:addParam("QJ", "Use Q ",SCRIPT_PARAM_ONOFF,false)
 		cfg.Clear:addParam("WJ", "Use W",SCRIPT_PARAM_ONOFF,true)
@@ -113,16 +116,12 @@ function OnLoad()
 	cfg:addParam("info5", "", SCRIPT_PARAM_INFO, "")
 	cfg:addParam("info6", "Script developed by OneTrickPony", SCRIPT_PARAM_INFO, "")
 
-
+	cfg:addSubMenu("Settings","SS")
+		cfg.SS:addSubMenu("W Predicion","winfo")
+			Q:AddToMenu(cfg.SS.winfo)
+	DelayAction(function() print_msg("Lastset version (v".. ScriptVersion ..") loaded!") end, 2)
 end
 function OnDraw()
-    for i = 1, myHero.buffCount do
-        local tBuff = myHero:getBuff(i)
-        if BuffIsValid(tBuff) then
-                DrawTextA(tBuff.name,12,20,20*i+20)
-        end
-    end
-
 end
 
 function OnTick()
@@ -158,7 +157,7 @@ function Combo()
 		if(cfg.Combo.E and GetDistance(target) < E.range and E:IsReady() ) then E:Cast(target) end
 		if(cfg.Combo.Q and GetDistance(target) < Q.range and Q:IsReady() ) then Q:Cast(target) end
 		if(cfg.Combo.W and GetDistance(target) < W.range and W:IsReady() ) then W:Cast(target) end
-		if(cfg.Combo.R and CountEnemyHeroInRange(750) >= cfg.Combo.mnChampR and not Ulton and R:IsReady() and CheckMana(cfg.Combo.mnManaR)) then R:Cast(target) end
+		if(cfg.Combo.R and CountEnemyHeroInRange(700) >= cfg.Combo.mnChampR and not Ulton and R:IsReady() and CheckMana(cfg.Combo.mnManaR)) then R:Cast(target) end
 	end
 
 end
@@ -220,6 +219,9 @@ function HarassToggle()
 		if(cfg.Harras.WH and GetDistance(target) < W.range and W:IsReady() ) then W:Cast(target) end
 	end
 end
+
+
+--Check Ulti
 function OnUpdateBuff(unit, buff)
     
 	if buff.name=="SwainMetamorphism" and unit and unit.isMe then
@@ -231,11 +233,11 @@ end
  
 function OnRemoveBuff(unit,buff)
 
-		if buff.name=="SwainMetamorphism" and unit and unit.isMe then
-			Ulton = false
+	if buff.name=="SwainMetamorphism" and unit and unit.isMe then
+		Ulton = false
 			
 
-		end
+	end
 		
 end
 
@@ -244,21 +246,31 @@ function GetMinion()
   enemyMinions:update()
   return enemyMinions.iCount
 end
+
+
 function GetJungle()
   
   jungleMinions:update()
   return jungleMinions.iCount
 end
+
+
+
 function GetEnemyR()
   
-  return CountEnemyHeroInRange(750)
+  return CountEnemyHeroInRange(700)
 end
+
+
+
+
+
 
 function CheckMana(mana)
   
   if not mana then mana = 100 end
   
-  -- Check Mana
+  
   if myHero.mana / myHero.maxMana > mana / 100 then
     return true
   else 
@@ -266,3 +278,9 @@ function CheckMana(mana)
   end
 end
 
+function print_msg(msg)
+  if msg ~= nil then
+    msg = tostring(msg)
+    print("<font color=\"#79E886\"><b>[OneTrick Swain]</b></font> <font color=\"#FFFFFF\">".. msg .."</font>")
+  end
+end
