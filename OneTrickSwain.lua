@@ -19,7 +19,7 @@ local ScriptVersion = 0.2
 local jungleMinions = minionManager(MINION_JUNGLE, 700, myHero, MINION_SORT_HEALTH_ASC)
 local enemyMinions = minionManager(MINION_ENEMY, 750, myHero,MINION_SORT_HEALTH_ASC)
 
---SimpleUpdater("[OneTrickFiddle]", ScriptVersion, "raw.github.com" , "/OneTrickPonyBoL/Script/master/Fiddle.lua" , SCRIPT_PATH .. "/Fiddle.lua" , "OneTrickPonyBoL/Script/master/Fiddle.version" ):CheckUpdate()
+SimpleUpdater("[OneTrickSwain]", ScriptVersion, "raw.github.com" , "/OneTrickPonyBoL/Script/master/OneTrickSwain.lua" , SCRIPT_PATH .. "/OneTrickSwain.lua" , "OneTrickPonyBoL/Script/master/OneTrickSwain.version" ):CheckUpdate()
 
 local ScriptVersionDisp = "1.0"
 local ScriptUpdate = "06.04.2016"
