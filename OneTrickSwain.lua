@@ -20,14 +20,15 @@ local cfg = scriptConfig("Swain", "Swain")
 local OrbLib = OrbWalkManager()
 local STS = SimpleTS()
 local CLib = DrawManager()
+local DLib = DamageLib()
 local Q, W, E, R, IGNITE
 local Ulton = false
-local ScriptVersion = 0.2
+local ScriptVersion = 0.3
 local jungleMinions = minionManager(MINION_JUNGLE, 700, myHero, MINION_SORT_HEALTH_ASC)
 local enemyMinions = minionManager(MINION_ENEMY, 750, myHero,MINION_SORT_HEALTH_ASC)
 --ScriptVersion Menu
-local ScriptVersionDisp = "0.2"
-local ScriptUpdate = "08.04.2016"
+local ScriptVersionDisp = "0.3"
+local ScriptUpdate = "09.04.2016"
 local SupportedVersion = "6.7"
 
 SimpleUpdater("[OneTrickSwain]", ScriptVersion, "raw.github.com" , "/OneTrickPonyBoL/Script/master/OneTrickSwain.lua" , SCRIPT_PATH .. "/OneTrickSwain.lua" , "OneTrickPonyBoL/Script/master/OneTrickSwain.version" ):CheckUpdate()
@@ -40,7 +41,7 @@ function OnLoad()
 	--Spells
 	Q = Spell(_Q, 625)
 	W = Spell(_W, 900)
-	W:SetSkillshot(SKILLSHOT_CIRCULAR, 125, 0.850, math.huge)
+	W:SetSkillshot(SKILLSHOT_CIRCULAR, 125, 1.100, math.huge)
 	E = Spell(_E, 750)
 	R = Spell(_R, 700)
 	
@@ -50,14 +51,13 @@ function OnLoad()
 	DrawE = CLib:CreateCircle(myHero, E.range, 1, {100, 255, 0, 0}, "Draw E range")
 	DrawR = CLib:CreateCircle(myHero, R.range, 1, {100, 255, 0, 0}, "Draw R range")
 
-
 	cfg:addSubMenu("Key Binds", "Key")
     cfg.Key:addParam("combo", "Combo", SCRIPT_PARAM_ONKEYDOWN, false, string.byte(" "))
  	cfg.Key:addParam("harras", "Harras", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("C"))
  	cfg.Key:addParam("lasthit", "Lasthit", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("X"))
   	cfg.Key:addParam("laneclear", "Laneclear/Jungleclear", SCRIPT_PARAM_ONKEYDOWN, false, string.byte("V"))
   	cfg.Key:addParam("HotKey", "Harass Toggle Key", SCRIPT_PARAM_ONKEYTOGGLE, false, string.byte('T'))
-  	cfg.Key:addParam("Cords", "Return Cords", SCRIPT_PARAM_ONKEYDOWN, false, string.byte('K'))
+  	
 
 	
 	cfg:addSubMenu("TargetSelector","TargetSelector")
@@ -106,9 +106,9 @@ function OnLoad()
 
 	cfg:addSubMenu("Auto Setting","auto")
 		cfg.auto:addParam("autooff", "Auto Disable R if no1 in Range", SCRIPT_PARAM_ONOFF,true)
-		cfg.auto:addParam("autozon", "Auto Zhonias", SCRIPT_PARAM_ONOFF, false)
-		cfg.auto:addParam("autozonhp","Min Hp for Zhonias", SCRIPT_PARAM_SLICE,30,1,100)
-
+		--cfg.auto:addParam("autozon", "Auto Zhonias", SCRIPT_PARAM_ONOFF, false)
+		--cfg.auto:addParam("autozonhp","Min Hp for Zhonias", SCRIPT_PARAM_SLICE,30,1,100)
+	
 	cfg:addParam("info1", "", SCRIPT_PARAM_INFO, "")
 	cfg:addParam("info2", "Script version", SCRIPT_PARAM_INFO, ScriptVersionDisp)
 	cfg:addParam("info3", "Last update", SCRIPT_PARAM_INFO, ScriptUpdate)
@@ -119,12 +119,14 @@ function OnLoad()
 	cfg:addSubMenu("Settings","SS")
 		cfg.SS:addSubMenu("W Predicion","winfo")
 			Q:AddToMenu(cfg.SS.winfo)
+	cfg:addSubMenu("Skinchanger", "skin")
+	if VIP_USER then SkinLoad() end
 	DelayAction(function() print_msg("Lastset version (v".. ScriptVersion ..") loaded!") end, 2)
 end
-function OnDraw()
-end
+
 
 function OnTick()
+
 
 
 	if (myHero.dead) then return end
@@ -263,9 +265,6 @@ end
 
 
 
-
-
-
 function CheckMana(mana)
   
   if not mana then mana = 100 end
@@ -283,4 +282,24 @@ function print_msg(msg)
     msg = tostring(msg)
     print("<font color=\"#79E886\"><b>[OneTrick Swain]</b></font> <font color=\"#FFFFFF\">".. msg .."</font>")
   end
+end
+function SkinLoad()
+    cfg.skin:addParam('changeSkin', 'Change Skin', SCRIPT_PARAM_ONOFF, false);
+    cfg.skin:setCallback('changeSkin', function(nV)
+        if (nV) then
+            SetSkin(myHero, cfg.skin.skinID)
+        else
+            SetSkin(myHero, -1)
+        end
+    end)
+    cfg.skin:addParam('skinID', 'Skin', SCRIPT_PARAM_LIST, 1, {"Tyrant", "Northern Front", "Bilgewater","Classic" }) -- Here change the Numbers with Skinnames
+    cfg.skin:setCallback('skinID', function(nV)
+        if (cfg.skin.changeSkin) then
+            SetSkin(myHero, nV)
+        end
+    end)
+    
+    if (cfg.skin.changeSkin) then
+        SetSkin(myHero, cfg.skin.skinID)
+    end
 end
