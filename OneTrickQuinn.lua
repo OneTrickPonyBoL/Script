@@ -102,13 +102,11 @@ function OnLoad()
 
 		--Auto Settings 
 	cfg:addSubMenu("Settings","SS")
-	--	cfg.SS:addParam("ultbase","Auto Ult in Base", SCRIPT_PARAM_ONOFF,false)
-		cfg.SS:addParam("blank1","",SCRIPT_PARAM_INFO,"")
+		--cfg.SS:addParam("ultbase","Auto Ult in Base", SCRIPT_PARAM_ONOFF,false)
 		cfg.SS:addParam("autotrinket","Auto Buy Blue Trinket at Lvl 9 ", SCRIPT_PARAM_ONOFF,false)
-		cfg.SS:addParam("blank2","",SCRIPT_PARAM_INFO,"")
 		cfg.SS:addSubMenu("Interrupter","IR")
 		Interrupter(cfg.SS.IR):AddCallback(function(target) self:CastE(target) end)
-	--	cfg.SS:addParam("blank","",SCRIPT_PARAM_INFO,"")
+		
 		
 
 		--Prediction for Q
@@ -133,7 +131,7 @@ end
 function OnTick()
 	
 	if (myHero.dead) then return end
-	if InFountain() and myHero.level >= 6 and not Ultibuff and cfg.SS.ultbase then R:Cast() end
+	--if InFountain() and myHero.level >= 6 and not Ultibuff and cfg.SS.ultbase then R:Cast() end
 	if cfg.Key.combo then Combo() end
   	if cfg.Key.harras then Harras() end
   	if cfg.Key.laneclear then LaneClear() end
@@ -151,14 +149,14 @@ function Combo()
 				myHero:Attack(target)
 			end
 		end
-		if (cfg.Combo.E and GetDistance(target) < E.range and E:IsReady() ) then E:Cast(target) end
-		if (cfg.Combo.Q and GetDistance(target) < Q.range and Q:IsReady() ) then Q:Cast(target) end
+		if (cfg.Combo.E and GetDistance(target) < E.range and E:IsReady() and PassivCheck == false ) then E:Cast(target) end
+		if (cfg.Combo.Q and GetDistance(target) < Q.range and Q:IsReady() and PassivCheck == false ) then Q:Cast(target) end
 		
 	end
 end
 
 function Harras()
-	if not CheckMana(cfg.Harras.minMana) then return end
+	if not CheckMana(cfg.Harass.minMana) then return end
 	target = STS:GetTarget(1200)
 	if(target ~= nil) then
 		if PassivCheck == true then
