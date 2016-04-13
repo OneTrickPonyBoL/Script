@@ -14,7 +14,7 @@ end
 
 -- Autoupdate
 local ScriptVersion = 0.1
---SimpleUpdater("[OneTrickQuinn]", ScriptVersion, "raw.github.com" , "/OneTrickPonyBoL/Script/master/Fiddle.lua" , SCRIPT_PATH .. "/Fiddle.lua" , "OneTrickPonyBoL/Script/master/Fiddle.version" ):CheckUpdate()
+SimpleUpdater("[OneTrickQuinn]", ScriptVersion, "raw.github.com" , "/OneTrickPonyBoL/Script/master/OneTrickQuinn.lua" , SCRIPT_PATH .. "/Fiddle.lua" , "OneTrickPonyBoL/Script/master/OneTrickQuinn.version" ):CheckUpdate()
 
 --Lib Shortcuts
 
@@ -37,7 +37,7 @@ local enemyMinions = minionManager(MINION_ENEMY, 750, myHero,MINION_SORT_HEALTH_
 --Menu 
 local cfg = scriptConfig("One Trick Quinn", "OneTrickQuinn")
 local ScriptVersionDisp = "0.1"
-local ScriptUpdate = "07.04.2016"
+local ScriptUpdate = "13.04.2016"
 local SupportedVersion = "6.7"
 
 
@@ -102,13 +102,13 @@ function OnLoad()
 
 		--Auto Settings 
 	cfg:addSubMenu("Settings","SS")
-		cfg.SS:addParam("ultbase","Auto Ult in Base", SCRIPT_PARAM_ONOFF,false)
+	--	cfg.SS:addParam("ultbase","Auto Ult in Base", SCRIPT_PARAM_ONOFF,false)
 		cfg.SS:addParam("blank1","",SCRIPT_PARAM_INFO,"")
 		cfg.SS:addParam("autotrinket","Auto Buy Blue Trinket at Lvl 9 ", SCRIPT_PARAM_ONOFF,false)
 		cfg.SS:addParam("blank2","",SCRIPT_PARAM_INFO,"")
 		cfg.SS:addSubMenu("Interrupter","IR")
 		Interrupter(cfg.SS.IR):AddCallback(function(target) self:CastE(target) end)
-		cfg.SS:addParam("blank","",SCRIPT_PARAM_INFO,"")
+	--	cfg.SS:addParam("blank","",SCRIPT_PARAM_INFO,"")
 		
 
 		--Prediction for Q
@@ -133,7 +133,7 @@ end
 function OnTick()
 	
 	if (myHero.dead) then return end
-	--if InFountain() and myHero.level >= 6
+	if InFountain() and myHero.level >= 6 and not Ultibuff and cfg.SS.ultbase then R:Cast() end
 	if cfg.Key.combo then Combo() end
   	if cfg.Key.harras then Harras() end
   	if cfg.Key.laneclear then LaneClear() end
@@ -212,22 +212,6 @@ function HarassToggle()
 		if(cfg.Harras.QT and GetDistance(target) < Q.range and Q:IsReady() ) then Q:Cast(target) end
 	end
 end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 function GetMinion() 
   enemyMinions:update()
