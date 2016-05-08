@@ -139,7 +139,7 @@ function OnLoad()
 		
 	end
 
-	ScriptMsg("Successfully Loaded Version: "..Script_Version "")
+	ScriptMsg("Successfully Loaded Version: "..Script_Version)
 	DelayAction(function()AutoBuy()end, 4)
 end
 function OnDraw()
