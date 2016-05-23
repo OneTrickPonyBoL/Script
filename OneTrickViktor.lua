@@ -1,5 +1,5 @@
 local AUTOUPDATES = true
-local version = 0.4
+local version = 0.3
 if myHero.charName ~= "Viktor" then return end
 
 
@@ -22,7 +22,7 @@ function CheckUpdate()
         ToUpdate.VersionPath = "raw.githubusercontent.com/OneTrickPonyBoL/Script/master/version/viktor.version"
         ToUpdate.ScriptPath = "raw.githubusercontent.com/OneTrickPonyBoL/Script/master/OneTrickViktor.lua"
         ToUpdate.SavePath = SCRIPT_PATH.._ENV.FILE_NAME
-        ToUpdate.CallbackUpdate = function(NewVersion,OldVersion) ScriptMsg("Updated to"..NewVersion". Please reload with 2x F9") end
+        ToUpdate.CallbackUpdate = function(NewVersion,OldVersion) ScriptMsg("Updated to ["..NewVersion.."] Please reload with 2x F9") end
         ToUpdate.CallbackNoUpdate = function(OldVersion) ScriptMsg("No Updates Found") end
         ToUpdate.CallbackNewVersion = function(NewVersion) ScriptMsg("New Version found ["..NewVersion.."] Please Wait..." ) end
         ToUpdate.CallbackError = function(NewVersion) ScriptMsg("Error while downloading.") end
