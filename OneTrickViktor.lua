@@ -1,7 +1,8 @@
-if myHero.charName ~= "Viktor" then return end
 local AUTOUPDATES = true
 local version = 0.4
-local ScriptName = "OneTrick Viktor"
+if myHero.charName ~= "Viktor" then return end
+
+
 ---//==================================================\\---
 --|| > Bol Tools                                        ||--
 ---\\==================================================//---
@@ -13,20 +14,13 @@ TrackerLoad("t55ReAPeSkNRXc3I")
 ---//==================================================\\---
 --|| > Simple Lib                                       ||--
 ---\\==================================================//---
-function Simple()
-    local r = _Required()
-    r:Add({Name = "SimpleLib", Url = "raw.githubusercontent.com/jachicao/BoL/master/SimpleLib.lua"})
-    r:Check()
-    if r:IsDownloading() then return end
-    if OrbwalkManager == nil then print("Check your SimpleLib file, isn't working... The script can't load without SimpleLib. Try to copy-paste the entire SimpleLib.lua on your common folder.") return end
-    DelayAction(function() CheckUpdate() end, 5)
-end
+
 function CheckUpdate()
     if AUTOUPDATES then
         local ToUpdate = {}
         ToUpdate.LocalVersion = version
-        ToUpdate.VersionPath = "https://raw.githubusercontent.com/OneTrickPonyBoL/Script/master/version/viktor.version"
-        ToUpdate.ScriptPath = "https://raw.githubusercontent.com/OneTrickPonyBoL/Script/master/OneTrickViktor.lua"
+        ToUpdate.VersionPath = "raw.githubusercontent.com/OneTrickPonyBoL/Script/master/version/viktor.version"
+        ToUpdate.ScriptPath = "raw.githubusercontent.com/OneTrickPonyBoL/Script/master/OneTrickViktor.lua"
         ToUpdate.SavePath = SCRIPT_PATH.._ENV.FILE_NAME
         ToUpdate.CallbackUpdate = function(NewVersion,OldVersion) ScriptMsg("Updated to"..NewVersion". Please reload with 2x F9") end
         ToUpdate.CallbackNoUpdate = function(OldVersion) ScriptMsg("No Updates Found") end
@@ -45,9 +39,7 @@ end
 function ErrorMsg(msg)
   print("<b><font color=\"#FF1493\">[OneTrick Viktor][Error]</b></font>  <font color=\"#FF0000\">".. msg .."</font>")
 end
-function TargetMsg(msg)
-  print("<b><font color=\"#370e32\">[OneTrick Targetselector]</b></font>  <font color=\"#FF0000\">".. msg .."</font>")
-end
+
 
 
 
@@ -238,7 +230,7 @@ function OnLoad()
     r:Add({Name = "SimpleLib", Url = "raw.githubusercontent.com/jachicao/BoL/master/SimpleLib.lua"})
     r:Check()
     if r:IsDownloading() then return end
-    if OrbwalkManager == nil then print("Check your SimpleLib file, isn't working... The script can't load without SimpleLib. Try to copy-paste the entire SimpleLib.lua on your common folder.") return end
+   
     DelayAction(function() CheckUpdate() end, 5)
 	Variables()
 	LoadMenu()
