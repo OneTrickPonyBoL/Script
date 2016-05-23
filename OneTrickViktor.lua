@@ -1,5 +1,7 @@
 if myHero.charName ~= "Viktor" then return end
-
+local AUTOUPDATES = true
+local version = 0.3
+local ScriptName = "OneTrick Viktor"
 ---//==================================================\\---
 --|| > Bol Tools                                        ||--
 ---\\==================================================//---
@@ -11,94 +13,53 @@ TrackerLoad("t55ReAPeSkNRXc3I")
 ---//==================================================\\---
 --|| > Simple Lib                                       ||--
 ---\\==================================================//---
-if FileExist(LIB_PATH .. "/SimpleLib.lua") then
-    require("SimpleLib")
+function Simple()
+    local r = _Required()
+    r:Add({Name = "SimpleLib", Url = "raw.githubusercontent.com/jachicao/BoL/master/SimpleLib.lua"})
+    r:Check()
+    if r:IsDownloading() then return end
     
-else
-  	print_msg("Downloading SimpleLib, please don't press F9")
-    DelayAction(function() DownloadFile("https://raw.githubusercontent.com/jachicao/BoL/master/SimpleLib.lua".."?rand="..math.random(1,10000), LIB_PATH.."SimpleLib.lua", function () print_msg("Successfully downloaded SimpleLib. Press F9 twice.") end) end, 3) 
 end
-
+function CheckUpdate()
+    if AUTOUPDATES then
+        local ToUpdate = {}
+        ToUpdate.LocalVersion = version
+        ToUpdate.VersionPath = "https://raw.githubusercontent.com/OneTrickPonyBoL/Script/master/version/viktor.version"
+        ToUpdate.ScriptPath = "https://raw.githubusercontent.com/OneTrickPonyBoL/Script/master/OneTrickViktor.lua"
+        ToUpdate.SavePath = SCRIPT_PATH.._ENV.FILE_NAME
+        ToUpdate.CallbackUpdate = function(NewVersion,OldVersion) PrintMessage(ScriptName, "Updated to "..NewVersion..". Please reload with 2x F9.") end
+        ToUpdate.CallbackNoUpdate = function(OldVersion) PrintMessage(ScriptName, "No Updates Found.") end
+        ToUpdate.CallbackNewVersion = function(NewVersion) PrintMessage(ScriptName, "New Version found ("..NewVersion.."). Please wait...") end
+        ToUpdate.CallbackError = function(NewVersion) PrintMessage(ScriptName, "Error while downloading.") end
+        _ScriptUpdate(ToUpdate)
+    end
+end
 ---//==================================================\\---
 --|| > Msg Functions                                    ||--
 ---\\==================================================//---
 function ScriptMsg(msg)
-  print("<font color=\"#FF1493\">[OneTrick Viktor][Beta]</b></font>  <font color=\"#FFFF00\">".. msg .."</font>")
+  print("<b><font color=\"#FF1493\">[OneTrick Viktor][Beta]</b></font>  <font color=\"#FFFF00\">".. msg .."</font>")
 end
 
 function ErrorMsg(msg)
-  print("<font color=\"#FF1493\">[OneTrick Viktor][Error]</b></font>  <font color=\"#FF0000\">".. msg .."</font>")
+  print("<b><font color=\"#FF1493\">[OneTrick Viktor][Error]</b></font>  <font color=\"#FF0000\">".. msg .."</font>")
 end
 function TargetMsg(msg)
-  print("<font color=\"#370e32\">[OneTrick Targetselector]</b></font>  <font color=\"#FF0000\">".. msg .."</font>")
+  print("<b><font color=\"#370e32\">[OneTrick Targetselector]</b></font>  <font color=\"#FF0000\">".. msg .."</font>")
 end
 
 
 
 ---//==================================================\\---
 --|| > Table                                    ||--
----\\==================================================//---
-local isAGapcloserUnit = {
-  ['Ahri']        = {true, spell = _R,          range = 450,   projSpeed = 2200, },
-  ['Aatrox']      = {true, spell = _Q,                  range = 1000,  projSpeed = 1200, },
-  ['Akali']       = {true, spell = _R,                  range = 800,   projSpeed = 2200, },
-  ['Alistar']     = {true, spell = _W,                  range = 650,   projSpeed = 2000, },
-  ['Amumu']       = {true, spell = _Q,                  range = 1100,  projSpeed = 1800, },
-  ['Corki']       = {true, spell = _W,                  range = 800,   projSpeed = 650,  },
-  ['Diana']       = {true, spell = _R,                  range = 825,   projSpeed = 2000, },
-  ['Darius']      = {true, spell = _R,                  range = 460,   projSpeed = math.huge, },
-  ['Fiora']       = {true, spell = _Q,                  range = 600,   projSpeed = 2000, },
-  ['Fizz']        = {true, spell = _Q,                  range = 550,   projSpeed = 2000, },
-  ['Gragas']      = {true, spell = _E,                  range = 600,   projSpeed = 2000, },
-  ['Graves']      = {true, spell = _E,                  range = 425,   projSpeed = 2000, exeption = true },
-  ['Hecarim']     = {true, spell = _R,                  range = 1000,  projSpeed = 1200, },
-  ['Irelia']      = {true, spell = _Q,                  range = 650,   projSpeed = 2200, },
-  ['JarvanIV']    = {true, spell = _Q,                  range = 770,   projSpeed = 2000, },
-  ['Jax']         = {true, spell = _Q,                  range = 700,   projSpeed = 2000, },
-  ['Jayce']       = {true, spell = 'JayceToTheSkies',   range = 600,   projSpeed = 2000, },
-  ['Khazix']      = {true, spell = _E,                  range = 900,   projSpeed = 2000, },
-  ['Leblanc']     = {true, spell = _W,                  range = 600,   projSpeed = 2000, },
-  ['Leona']       = {true, spell = _E,                  range = 900,   projSpeed = 2000, },
-  ['Lucian']      = {true, spell = _E,                  range = 425,   projSpeed = 2000, },
-  ['Malphite']    = {true, spell = _R,                  range = 1000,  projSpeed = 1500, },
-  ['Maokai']      = {true, spell = _W,                  range = 525,   projSpeed = 2000, },
-  ['MonkeyKing']  = {true, spell = _E,                  range = 650,   projSpeed = 2200, },
-  ['Pantheon']    = {true, spell = _W,                  range = 600,   projSpeed = 2000, },
-  ['Poppy']       = {true, spell = _E,                  range = 525,   projSpeed = 2000, },
-  ['Riven']       = {true, spell = _E,                  range = 150,   projSpeed = 2000, },
-  ['Renekton']    = {true, spell = _E,                  range = 450,   projSpeed = 2000, },
-  ['Sejuani']     = {true, spell = _Q,                  range = 650,   projSpeed = 2000, },
-  ['Shen']        = {true, spell = _E,                  range = 575,   projSpeed = 2000, },
-  ['Shyvana']     = {true, spell = _R,                  range = 1000,  projSpeed = 2000, },
-  ['Tristana']    = {true, spell = _W,                  range = 900,   projSpeed = 2000, },
-  ['Tryndamere']  = {true, spell = 'Slash',             range = 650,   projSpeed = 1450, },
-  ['XinZhao']     = {true, spell = _E,                  range = 650,   projSpeed = 2000, },
-  ['Yasuo']       = {true, spell = _E,                  range = 475,   projSpeed = 1000, },
-  ['Vayne']       = {true, spell = _Q,                  range = 300,   projSpeed = 1000, },
-}
-local Interrupt = {
-    ["Katarina"] = {charName = "Katarina", stop = {["KatarinaR"] = {name = "Death lotus(R)", spellName = "KatarinaR", ult = true }}},
-    ["Nunu"] = {charName = "Nunu", stop = {["AbsoluteZero"] = {name = "Absolute Zero(R)", spellName = "AbsoluteZero", ult = true }}},
-    ["Malzahar"] = {charName = "Malzahar", stop = {["AlZaharNetherGrasp"] = {name = "Nether Grasp(R)", spellName = "AlZaharNetherGrasp", ult = true}}},
-    ["Caitlyn"] = {charName = "Caitlyn", stop = {["CaitlynAceintheHole"] = {name = "Ace in the hole(R)", spellName = "CaitlynAceintheHole", ult = true, projectileName = "caitlyn_ult_mis.troy"}}},
-    ["FiddleSticks"] = {charName = "FiddleSticks", stop = {["Crowstorm"] = {name = "Crowstorm(R)", spellName = "Crowstorm", ult = true}}},
-    ["Galio"] = {charName = "Galio", stop = {["GalioIdolOfDurand"] = {name = "Idole of Durand(R)", spellName = "GalioIdolOfDurand", ult = true}}},
-    ["Janna"] = {charName = "Janna", stop = {["ReapTheWhirlwind"] = {name = "Monsoon(R)", spellName = "ReapTheWhirlwind", ult = true}}},
-    ["MissFortune"] = {charName = "MissFortune", stop = {["MissFortune"] = {name = "Bullet time(R)", spellName = "MissFortuneBulletTime", ult = true}}},
-    ["MasterYi"] = {charName = "MasterYi", stop = {["MasterYi"] = {name = "Meditate(W)", spellName = "Meditate", ult = false}}},
-    ["Pantheon"] = {charName = "Pantheon", stop = {["PantheonRJump"] = {name = "Skyfall(R)", spellName = "PantheonRJump", ult = true}}},
-    ["Shen"] = {charName = "Shen", stop = {["ShenStandUnited"] = {name = "Stand united(R)", spellName = "ShenStandUnited", ult = true}}},
-    ["Urgot"] = {charName = "Urgot", stop = {["UrgotSwap2"] = {name = "Position Reverser(R)", spellName = "UrgotSwap2", ult = true}}},
-    ["Varus"] = {charName = "Varus", stop = {["VarusQ"] = {name = "Piercing Arrow(Q)", spellName = "Varus", ult = false}}},
-    ["Warwick"] = {charName = "Warwick", stop = {["InfiniteDuress"] = {name = "Infinite Duress(R)", spellName = "InfiniteDuress", ult = true}}},
-}
+---\\==================================================//--
 
 local myEnemyTable = GetEnemyHeroes()
 ---//==================================================\\---
 --|| > Script Infos                                     ||--
 ---\\==================================================//---
 
-local Script_Version = "0.5"
+local Script_Version = "0.2"
 local ScriptName = "OneTrick Viktor"
 local Developer = "OneTrickPony"
 local LastLevelCheck = 0
@@ -272,6 +233,9 @@ function OnProcessSpell(unit, spell)
 end
 
 function OnLoad()
+	Simple()
+	DelayAction(function() CheckUpdate() end, 7)
+	
 	Variables()
 	LoadMenu()
 	FillTable()
@@ -317,7 +281,7 @@ function OnDraw()
 		
 	end
 	if target and cfg.draw.tgd.target then
-		DrawCircle3D(target.x, target.y, target.z, 20, 3, ARGB(255, 255, 0, 188))
+		DrawCircle3D(target.x, target.y, target.z, cfg.draw.tgd.circleradius, cfg.draw.tgd.circlewidth , ARGB(table.unpack(cfg.draw.tgd.circlecolor)))
 	end
 	if target and cfg.draw.tgd.targettext then
 		if cfg.draw.tgd.targettype == 1 then
@@ -568,7 +532,7 @@ function Variables()
 	
 	EnemyMinions = minionManager(MINION_ENEMY, 700, myHero, MINION_SORT_HEALTH_ASC)
 	JungleMinions = minionManager(MINION_JUNGLE, 750, myHero, MINION_SORT_HEALTH_DEC)
-
+	DelayAction(function() _arrangePriorities() end, 10)
 	ts = TargetSelector(TARGET_LESS_CAST_PRIORITY, 1500, DAMAGE_MAGIC, false, true)
 	
 	
@@ -630,15 +594,18 @@ function LoadMenu()
 
 	cfg:addSubMenu("Draws","draw")
 		cfg.draw:addSubMenu("Target Draw Settings","tgd")
-			cfg.draw.tgd:addParam("target", "Draw my Target ", SCRIPT_PARAM_ONOFF, true)
+			cfg.draw.tgd:addParam("target", "Draw my Target with Circle ", SCRIPT_PARAM_ONOFF, true)
+			cfg.draw.tgd:addParam("circlecolor","Circle Color ",SCRIPT_PARAM_COLOR,{255, 255, 255, 255})
+			cfg.draw.tgd:addParam("circleradius","Circle Radius", SCRIPT_PARAM_SLICE,70,30,100)
+			cfg.draw.tgd:addParam("circlewidth","Circle Width",SCRIPT_PARAM_SLICE,3,1,15)
 			cfg.draw.tgd:addParam("targettext", "Draw my Target as Text ", SCRIPT_PARAM_ONOFF, true)
 			cfg.draw.tgd:addParam("targettype", "Text Position = ", SCRIPT_PARAM_LIST, 1, {"Fix on Screen","On Mouse"})
-			cfg.draw.tgd:addParam("targetsize","Text Size",SCRIPT_PARAM_SLICE,25,1,50)
+			cfg.draw.tgd:addParam("targetsize","Text Size",SCRIPT_PARAM_SLICE,25,1,65)
 			cfg.draw.tgd:addParam("TargetY", "Vertical Position of the Text", SCRIPT_PARAM_SLICE, 50, 0, 1000,20)
 			cfg.draw.tgd:addParam("TargetX", "Horizontal Position of the Text", SCRIPT_PARAM_SLICE, 50, 0, 1500,20)
+			cfg.draw.tgd:addParam("targetcolor","Text Color ",SCRIPT_PARAM_COLOR,{255, 255, 255, 255})
 			cfg.draw.tgd:addParam("resetsettings","Set Positions to default",SCRIPT_PARAM_ONOFF,false)
 
-		--cfg.draw:addParam("ecast","Show E Path", SCRIPT_PARAM_ONOFF,true)
 		cfg.draw:addParam("showdmg","Show Dmg on Hp Bar",SCRIPT_PARAM_ONOFF,true)
 		cfg.draw:addParam("showperma","Show PermaBox", SCRIPT_PARAM_ONOFF,true)
 		
@@ -671,16 +638,20 @@ function LoadMenu()
 		cfg.ks:addParam("r","Use R",SCRIPT_PARAM_ONOFF,true)
 		if Ignite then cfg.ks:addParam("ignite","Use Ignite",SCRIPT_PARAM_ONOFF,true) end
 
-	cfg:addSubMenu("Interrupts","inter")
-			cfg.inter:addParam("soon","Coming soon",SCRIPT_PARAM_INFO,"")
- 	cfg:addSubMenu("Gapclose", "gab")
- 			cfg.gab:addParam("soon","Coming soon",SCRIPT_PARAM_INFO,"")
+		cfg.ms:addSubMenu("Interrupts","inter")
+				cfg.ms.inter:addSubMenu("Use W To Interrupt Channeling Spells", "W")
+	 			cfg.ms.inter:addSubMenu("Use R To Interrupt Channeling Spells", "R")
+	 			_Interrupter(cfg.ms.interW):CheckChannelingSpells():AddCallback(function(target) W:Cast(target) end)
+	 			_Interrupter(cfg.ms.interR):CheckChannelingSpells():AddCallback(function(target) R:Cast(target) end)
+	 	cfg.ms:addSubMenu("Gapclose", "gab")
+	 			cfg.ms.gab:addSubMenu("Use W To Interrupt Gapclosers", "W")
+	 			_Interrupter(cfg.ms.gab.W):CheckGapcloserSpells():AddCallback(function(target) W:Cast(target) end)
 	cfg:addParam("info","",SCRIPT_PARAM_INFO,"")
 	cfg:addParam("info2","",SCRIPT_PARAM_INFO,"")
 	cfg:addParam("info3","                         OneTrickViktor",SCRIPT_PARAM_INFO,"")
 	cfg:addParam("info4","Scripter OneTrickPony",SCRIPT_PARAM_INFO,"")
 	cfg:addParam("info6","ScriptVerion",SCRIPT_PARAM_INFO,Script_Version)
-	cfg:addParam("info67","Last Tested Patch ",SCRIPT_PARAM_INFO,"6.9")
+	cfg:addParam("info67","Last Tested Patch ",SCRIPT_PARAM_INFO,"6.10")
 end
 function FillTable()
 	Champ = { }
@@ -738,4 +709,204 @@ function CheckMana(mana)
   else 
     return false
   end
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class "_Required"
+function _Required:__init()
+    self.requirements = {}
+    self.downloading = {}
+    return self
+end
+
+function _Required:Add(t)
+    assert(t and type(t) == "table", "_Required: table is invalid!")
+    local name = t.Name
+    assert(name and type(name) == "string", "_Required: name is invalid!")
+    local url = t.Url
+    assert(url and type(url) == "string", "_Required: url is invalid!")
+    local extension = t.Extension ~= nil and t.Extension or "lua"
+    local usehttps = t.UseHttps ~= nil and t.UseHttps or true
+    table.insert(self.requirements, {Name = name, Url = url, Extension = extension, UseHttps = usehttps})
+end
+
+function _Required:Check()
+    for i, tab in pairs(self.requirements) do
+        local name = tab.Name
+        local url = tab.Url
+        local extension = tab.Extension
+        local usehttps = tab.UseHttps
+        if not FileExist(LIB_PATH..name.."."..extension) then
+            print("Downloading a required library called "..name.. ". Please wait...")
+            local d = _Downloader(tab)
+            table.insert(self.downloading, d)
+        end
+    end
+    
+    if #self.downloading > 0 then
+        for i = 1, #self.downloading, 1 do 
+            local d = self.downloading[i]
+            AddTickCallback(function() d:Download() end)
+        end
+        self:CheckDownloads()
+    else
+        for i, tab in pairs(self.requirements) do
+            local name = tab.Name
+            local url = tab.Url
+            local extension = tab.Extension
+            local usehttps = tab.UseHttps
+            if FileExist(LIB_PATH..name.."."..extension) and extension == "lua" then
+                require(name)
+            end
+        end
+    end
+end
+
+function _Required:CheckDownloads()
+    if #self.downloading == 0 then 
+        print("Required libraries downloaded. Please reload with 2x F9.")
+    else
+        for i = 1, #self.downloading, 1 do
+            local d = self.downloading[i]
+            if d.GotScript then
+                table.remove(self.downloading, i)
+                break
+            end
+        end
+        DelayAction(function() self:CheckDownloads() end, 2) 
+    end 
+end
+
+function _Required:IsDownloading()
+    return self.downloading ~= nil and #self.downloading > 0 or false
+end
+
+class "_Downloader"
+function _Downloader:__init(t)
+    local name = t.Name
+    local url = t.Url
+    local extension = t.Extension ~= nil and t.Extension or "lua"
+    local usehttps = t.UseHttps ~= nil and t.UseHttps or true
+    self.SavePath = LIB_PATH..name.."."..extension
+    self.ScriptPath = '/BoL/TCPUpdater/GetScript'..(usehttps and '5' or '6')..'.php?script='..self:Base64Encode(url)..'&rand='..math.random(99999999)
+    self:CreateSocket(self.ScriptPath)
+    self.DownloadStatus = 'Connect to Server'
+    self.GotScript = false
+end
+
+function _Downloader:CreateSocket(url)
+    if not self.LuaSocket then
+        self.LuaSocket = require("socket")
+    else
+        self.Socket:close()
+        self.Socket = nil
+        self.Size = nil
+        self.RecvStarted = false
+    end
+    self.Socket = self.LuaSocket.tcp()
+    if not self.Socket then
+        print('Socket Error')
+    else
+        self.Socket:settimeout(0, 'b')
+        self.Socket:settimeout(99999999, 't')
+        self.Socket:connect('sx-bol.eu', 80)
+        self.Url = url
+        self.Started = false
+        self.LastPrint = ""
+        self.File = ""
+    end
+end
+
+function _Downloader:Download()
+    if self.GotScript then return end
+    self.Receive, self.Status, self.Snipped = self.Socket:receive(1024)
+    if self.Status == 'timeout' and not self.Started then
+        self.Started = true
+        self.Socket:send("GET "..self.Url.." HTTP/1.1\r\nHost: sx-bol.eu\r\n\r\n")
+    end
+    if (self.Receive or (#self.Snipped > 0)) and not self.RecvStarted then
+        self.RecvStarted = true
+        self.DownloadStatus = 'Downloading Script (0%)'
+    end
+
+    self.File = self.File .. (self.Receive or self.Snipped)
+    if self.File:find('</si'..'ze>') then
+        if not self.Size then
+            self.Size = tonumber(self.File:sub(self.File:find('<si'..'ze>')+6,self.File:find('</si'..'ze>')-1))
+        end
+        if self.File:find('<scr'..'ipt>') then
+            local _,ScriptFind = self.File:find('<scr'..'ipt>')
+            local ScriptEnd = self.File:find('</scr'..'ipt>')
+            if ScriptEnd then ScriptEnd = ScriptEnd - 1 end
+            local DownloadedSize = self.File:sub(ScriptFind+1,ScriptEnd or -1):len()
+            self.DownloadStatus = 'Downloading Script ('..math.round(100/self.Size*DownloadedSize,2)..'%)'
+        end
+    end
+    if self.File:find('</scr'..'ipt>') then
+        self.DownloadStatus = 'Downloading Script (100%)'
+        local a,b = self.File:find('\r\n\r\n')
+        self.File = self.File:sub(a,-1)
+        self.NewFile = ''
+        for line,content in ipairs(self.File:split('\n')) do
+            if content:len() > 5 then
+                self.NewFile = self.NewFile .. content
+            end
+        end
+        local HeaderEnd, ContentStart = self.NewFile:find('<sc'..'ript>')
+        local ContentEnd, _ = self.NewFile:find('</scr'..'ipt>')
+        if not ContentStart or not ContentEnd then
+            if self.CallbackError and type(self.CallbackError) == 'function' then
+                self.CallbackError()
+            end
+        else
+            local newf = self.NewFile:sub(ContentStart+1,ContentEnd-1)
+            local newf = newf:gsub('\r','')
+            if newf:len() ~= self.Size then
+                if self.CallbackError and type(self.CallbackError) == 'function' then
+                    self.CallbackError()
+                end
+                return
+            end
+            local newf = Base64Decode(newf)
+            if type(load(newf)) ~= 'function' then
+                if self.CallbackError and type(self.CallbackError) == 'function' then
+                    self.CallbackError()
+                end
+            else
+                local f = io.open(self.SavePath,"w+b")
+                f:write(newf)
+                f:close()
+                if self.CallbackUpdate and type(self.CallbackUpdate) == 'function' then
+                    self.CallbackUpdate(self.OnlineVersion,self.LocalVersion)
+                end
+            end
+        end
+        self.GotScript = true
+    end
+end
+
+function _Downloader:Base64Encode(data)
+    local b='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
+    return ((data:gsub('.', function(x)
+        local r,b='',x:byte()
+        for i=8,1,-1 do r=r..(b%2^i-b%2^(i-1)>0 and '1' or '0') end
+        return r;
+    end)..'0000'):gsub('%d%d%d?%d?%d?%d?', function(x)
+        if (#x < 6) then return '' end
+        local c=0
+        for i=1,6 do c=c+(x:sub(i,i)=='1' and 2^(6-i) or 0) end
+        return b:sub(c+1,c+1)
+    end)..({ '', '==', '=' })[#data%3+1])
 end
