@@ -1,5 +1,5 @@
 local AUTOUPDATES = true
-local version = 0.3
+local version = 0.4
 if myHero.charName ~= "Viktor" then return end
 
 
