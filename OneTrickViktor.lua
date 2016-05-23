@@ -25,7 +25,7 @@ function CheckUpdate()
         ToUpdate.CallbackUpdate = function(NewVersion,OldVersion) ScriptMsg("Updated to ["..NewVersion.."] Please reload with 2x F9") end
         ToUpdate.CallbackNoUpdate = function(OldVersion) ScriptMsg("No Updates Found") end
         ToUpdate.CallbackNewVersion = function(NewVersion) ScriptMsg("New Version found ["..NewVersion.."] Please Wait..." ) end
-        ToUpdate.CallbackError = function(NewVersion) ScriptMsg("Error while downloading.") end
+        ToUpdate.CallbackError = function(NewVersion) ErrorMsg("Error while downloading.") end
         _ScriptUpdate(ToUpdate)
     end
 end
@@ -52,7 +52,7 @@ local myEnemyTable = GetEnemyHeroes()
 --|| > Script Infos                                     ||--
 ---\\==================================================//---
 
-local Script_Version = "0.2"
+local Script_Version = "0.4"
 local ScriptName = "OneTrick Viktor"
 local Developer = "OneTrickPony"
 local LastLevelCheck = 0
@@ -222,8 +222,6 @@ end
 ---\\==================================================//---
 
 
-function OnProcessSpell(unit, spell)
-end
 
 function OnLoad()
 	local r = _Required()
@@ -238,11 +236,9 @@ function OnLoad()
 	DrawPermashow()
 	DelayAction(function()AutoBuy()end, 4)
 
---	ScriptMsg("Successfully Loaded Version: "..Script_Version)
 end
 function OnWndMsg(key , msg)
-	if key == WM_LBUTTONDOWN  then
-    end
+	
 end
 function OnUpdateBuff(unit, buff)
     
@@ -540,7 +536,7 @@ function LoadMenu()
 	OrbwalkManager:LoadCommonKeys(cfg.Key)
     cfg.Key:addParam("info12", "---- Other Key ----", SCRIPT_PARAM_INFO, "")
   	cfg.Key:addParam("toggle", "Harass Toogle" , SCRIPT_PARAM_ONKEYTOGGLE , false , string.byte("H"))
-  	cfg.Key:addParam("r","Force R ",SCRIPT_PARAM_ONKEYDOWN, false , string.byte("T"))
+  	cfg.Key:addParam("r","Force R ",SCRIPT_PARAM_ONKEYDOWN, false , string.byte("R"))
   	
   	cfg:addSubMenu("Combo", "c")
   		cfg.c:addParam("q","Use Q",SCRIPT_PARAM_ONOFF,true)
