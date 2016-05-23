@@ -1,6 +1,6 @@
 if myHero.charName ~= "Viktor" then return end
 local AUTOUPDATES = true
-local version = 0.3
+local version = 0.4
 local ScriptName = "OneTrick Viktor"
 ---//==================================================\\---
 --|| > Bol Tools                                        ||--
@@ -18,7 +18,8 @@ function Simple()
     r:Add({Name = "SimpleLib", Url = "raw.githubusercontent.com/jachicao/BoL/master/SimpleLib.lua"})
     r:Check()
     if r:IsDownloading() then return end
-    
+    if OrbwalkManager == nil then print("Check your SimpleLib file, isn't working... The script can't load without SimpleLib. Try to copy-paste the entire SimpleLib.lua on your common folder.") return end
+    DelayAction(function() CheckUpdate() end, 5)
 end
 function CheckUpdate()
     if AUTOUPDATES then
@@ -27,10 +28,10 @@ function CheckUpdate()
         ToUpdate.VersionPath = "https://raw.githubusercontent.com/OneTrickPonyBoL/Script/master/version/viktor.version"
         ToUpdate.ScriptPath = "https://raw.githubusercontent.com/OneTrickPonyBoL/Script/master/OneTrickViktor.lua"
         ToUpdate.SavePath = SCRIPT_PATH.._ENV.FILE_NAME
-        ToUpdate.CallbackUpdate = function(NewVersion,OldVersion) PrintMessage(ScriptName, "Updated to "..NewVersion..". Please reload with 2x F9.") end
-        ToUpdate.CallbackNoUpdate = function(OldVersion) PrintMessage(ScriptName, "No Updates Found.") end
-        ToUpdate.CallbackNewVersion = function(NewVersion) PrintMessage(ScriptName, "New Version found ("..NewVersion.."). Please wait...") end
-        ToUpdate.CallbackError = function(NewVersion) PrintMessage(ScriptName, "Error while downloading.") end
+        ToUpdate.CallbackUpdate = function(NewVersion,OldVersion) ScriptMsg("Updated to"..NewVersion". Please reload with 2x F9") end
+        ToUpdate.CallbackNoUpdate = function(OldVersion) ScriptMsg("No Updates Found") end
+        ToUpdate.CallbackNewVersion = function(NewVersion) ScriptMsg("New Version found ["..NewVersion.."] Please Wait..." ) end
+        ToUpdate.CallbackError = function(NewVersion) ScriptMsg("Error while downloading.") end
         _ScriptUpdate(ToUpdate)
     end
 end
@@ -233,16 +234,19 @@ function OnProcessSpell(unit, spell)
 end
 
 function OnLoad()
-	Simple()
-	DelayAction(function() CheckUpdate() end, 7)
-	
+	local r = _Required()
+    r:Add({Name = "SimpleLib", Url = "raw.githubusercontent.com/jachicao/BoL/master/SimpleLib.lua"})
+    r:Check()
+    if r:IsDownloading() then return end
+    if OrbwalkManager == nil then print("Check your SimpleLib file, isn't working... The script can't load without SimpleLib. Try to copy-paste the entire SimpleLib.lua on your common folder.") return end
+    DelayAction(function() CheckUpdate() end, 5)
 	Variables()
 	LoadMenu()
 	FillTable()
 	DrawPermashow()
 	DelayAction(function()AutoBuy()end, 4)
 
-	ScriptMsg("Successfully Loaded Version: "..Script_Version)
+--	ScriptMsg("Successfully Loaded Version: "..Script_Version)
 end
 function OnWndMsg(key , msg)
 	if key == WM_LBUTTONDOWN  then
